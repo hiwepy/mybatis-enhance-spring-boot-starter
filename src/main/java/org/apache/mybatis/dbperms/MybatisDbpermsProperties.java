@@ -15,6 +15,8 @@
  */
 package org.apache.mybatis.dbperms;
 
+import java.util.concurrent.TimeUnit;
+
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import lombok.Getter;
@@ -31,5 +33,16 @@ public class MybatisDbpermsProperties {
 
 	/** Whether Enable Form Mybatis Dbperms. */
 	private boolean enabled = false;
+	
+	/**
+	 * 缓存过期时间
+	 */
+	private int expire = 30;
+	
+	/**
+	 * 缓存过期时间单位
+	 */
+	private TimeUnit unit = TimeUnit.MINUTES;
+	
 	
 }
