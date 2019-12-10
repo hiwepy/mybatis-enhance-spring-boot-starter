@@ -40,7 +40,7 @@ public class MybatisDbpermsAutoConfiguration implements ApplicationContextAware 
     			if(null == tablePermissionHandler) {
     				tablePermissionHandler = getApplicationContext().getBean(ITablePermissionAutowireHandler.class);
     			}
-    			if(null != tablePermissionHandler) {
+    			if(null == tablePermissionHandler) {
     				tablePermissionHandler = new DefaultTablePermissionAutowireHandler((metaHandler, tableName) -> {
 	            		return null;
 	            	});
