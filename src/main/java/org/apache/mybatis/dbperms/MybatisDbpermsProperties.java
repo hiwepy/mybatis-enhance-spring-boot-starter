@@ -30,9 +30,6 @@ import lombok.ToString;
 public class MybatisDbpermsProperties {
 
 	public static final String PREFIX = "mybatis-dbperms";
-
-	/** Whether Enable Form Mybatis Dbperms. */
-	private boolean enabled = false;
 	
 	/**
 	 * 缓存过期时间
