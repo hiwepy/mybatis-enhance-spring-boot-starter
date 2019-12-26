@@ -1,13 +1,11 @@
 package org.apache.mybatis.dbperms;
 
 import org.apache.ibatis.plugin.Plugin;
-import org.apache.mybatis.dbperms.interceptor.DataPermissionStatementInterceptor;
-import org.apache.mybatis.dbperms.parser.DefaultTablePermissionAnnotationHandler;
+import org.apache.mybatis.dbperms.interceptor.DefaultDataPermissionStatementInterceptor;
 import org.apache.mybatis.dbperms.parser.DefaultTablePermissionAutowireHandler;
-import org.apache.mybatis.dbperms.parser.ITablePermissionAnnotationHandler;
 import org.apache.mybatis.dbperms.parser.ITablePermissionAutowireHandler;
-import org.apache.mybatis.dbperms.parser.TablePermissionAnnotationParser;
-import org.apache.mybatis.dbperms.parser.TablePermissionAutowireParser;
+import org.apache.mybatis.dbperms.parser.def.TablePermissionAnnotationParser;
+import org.apache.mybatis.dbperms.parser.def.TablePermissionAutowireParser;
 import org.springframework.beans.BeansException;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -18,7 +16,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 @Configuration
-@ConditionalOnClass({ Plugin.class, DataPermissionStatementInterceptor.class })
+@ConditionalOnClass({ Plugin.class, DefaultDataPermissionStatementInterceptor.class })
 @EnableConfigurationProperties(MybatisDbpermsProperties.class)
 public class MybatisDbpermsAutoConfiguration implements ApplicationContextAware {
 	
@@ -55,26 +53,16 @@ public class MybatisDbpermsAutoConfiguration implements ApplicationContextAware 
     }
     
     @Bean
-    @ConditionalOnMissingBean
-    public ITablePermissionAnnotationHandler tablePermissionAnnotationHandler() {
-    	return new DefaultTablePermissionAnnotationHandler();
+    public TablePermissionAnnotationParser annotationPermissionParser() {
+    	return new TablePermissionAnnotationParser();
     }
     
     @Bean
-    @ConditionalOnMissingBean
-    public TablePermissionAnnotationParser annotationPermissionParser(ITablePermissionAnnotationHandler tablePermissionHandler) {
-    	TablePermissionAnnotationParser annotationPermissionParser = new TablePermissionAnnotationParser();
-    	annotationPermissionParser.setTablePermissionHandler(tablePermissionHandler);
-    	return annotationPermissionParser;
-    }
-    
-    @Bean
-    public DataPermissionStatementInterceptor dataPermissionStatementInterceptor(
+    public DefaultDataPermissionStatementInterceptor dataPermissionStatementInterceptor(
     		TablePermissionAutowireParser autowirePermissionParser,
     		TablePermissionAnnotationParser annotationPermissionParser) {
-        return new DataPermissionStatementInterceptor(autowirePermissionParser, annotationPermissionParser);
+        return new DefaultDataPermissionStatementInterceptor(autowirePermissionParser, annotationPermissionParser);
     }
-
 	
 	@Override
 	public void setApplicationContext(ApplicationContext applicationContext) throws BeansException {
