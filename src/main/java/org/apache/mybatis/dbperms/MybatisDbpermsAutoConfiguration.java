@@ -3,10 +3,14 @@ package org.apache.mybatis.dbperms;
 import org.apache.ibatis.plugin.Plugin;
 import org.apache.mybatis.dbperms.interceptor.DefaultDataPermissionStatementInterceptor;
 import org.apache.mybatis.dbperms.parser.DefaultTablePermissionAutowireHandler;
+import org.apache.mybatis.dbperms.parser.DefaultTablePermissionScriptHandler;
 import org.apache.mybatis.dbperms.parser.ITablePermissionAutowireHandler;
+import org.apache.mybatis.dbperms.parser.ITablePermissionScriptHandler;
 import org.apache.mybatis.dbperms.parser.def.TablePermissionAnnotationParser;
 import org.apache.mybatis.dbperms.parser.def.TablePermissionAutowireParser;
+import org.apache.mybatis.dbperms.parser.def.TablePermissionScriptParser;
 import org.springframework.beans.BeansException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
@@ -35,9 +39,14 @@ public class MybatisDbpermsAutoConfiguration implements ApplicationContextAware 
     			
     			ITablePermissionAutowireHandler tablePermissionHandler = super.getTablePermissionHandler();
     			
-    			if(null == tablePermissionHandler) {
-    				tablePermissionHandler = getApplicationContext().getBean(ITablePermissionAutowireHandler.class);
-    			}
+    			try {
+					if(null == tablePermissionHandler) {
+						tablePermissionHandler = getApplicationContext().getBean(ITablePermissionAutowireHandler.class);
+					}
+				} catch (BeansException e) {
+					System.err.println("需要自己实现ITablePermissionAutowireHandler接口");
+					e.printStackTrace();
+				}
     			if(null == tablePermissionHandler) {
     				tablePermissionHandler = new DefaultTablePermissionAutowireHandler((metaHandler, tableName) -> {
 	            		return null;
@@ -58,10 +67,44 @@ public class MybatisDbpermsAutoConfiguration implements ApplicationContextAware 
     }
     
     @Bean
+    public TablePermissionScriptParser scriptPermissionParser() {
+    	TablePermissionScriptParser scriptPermissionParser = new TablePermissionScriptParser() {
+    		
+    		@Override
+    		protected void internalInit() {
+    			
+    			super.internalInit();
+    			
+    			ITablePermissionScriptHandler tablePermissionHandler = super.getTablePermissionHandler();
+    			
+    			try {
+					if(null == tablePermissionHandler) {
+						tablePermissionHandler = getApplicationContext().getBean(ITablePermissionScriptHandler.class);
+					}
+				} catch (BeansException e) {
+					System.err.println("需要自己实现ITablePermissionScriptHandler接口");
+					e.printStackTrace();
+				}
+    			if(null == tablePermissionHandler) {
+    				tablePermissionHandler = new DefaultTablePermissionScriptHandler((metaHandler, tableName) -> {
+	            		return null;
+	            	});
+				}
+    			
+    			this.setTablePermissionHandler(tablePermissionHandler);
+    		}
+    		
+    	};
+    	 
+    	return scriptPermissionParser;
+    }
+    
+    @Bean
     public DefaultDataPermissionStatementInterceptor dataPermissionStatementInterceptor(
     		TablePermissionAutowireParser autowirePermissionParser,
-    		TablePermissionAnnotationParser annotationPermissionParser) {
-        return new DefaultDataPermissionStatementInterceptor(autowirePermissionParser, annotationPermissionParser);
+    		TablePermissionAnnotationParser annotationPermissionParser, 
+    		@Autowired(required = false) TablePermissionScriptParser scriptPermissionParser) {
+        return new DefaultDataPermissionStatementInterceptor(autowirePermissionParser, annotationPermissionParser, scriptPermissionParser);
     }
 	
 	@Override
