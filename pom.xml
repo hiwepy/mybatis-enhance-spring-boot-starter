@@ -373,8 +373,8 @@
 		<maven-nexus-staging-plugin.version>1.6.8</maven-nexus-staging-plugin.version>
 		
 		<mybatis.version>3.5.3</mybatis.version>
-		<mybatis-biz.version>1.0.0-SNAPSHOT</mybatis-biz.version>
-		<mybatis-dbperms.version>1.0.0-SNAPSHOT</mybatis-dbperms.version>
+		<mybatis-biz.version>1.0.0.RELEASE</mybatis-biz.version>
+		<mybatis-dbperms.version>1.0.0.RELEASE</mybatis-dbperms.version>
 		
 	</properties> 
 	
