@@ -9,7 +9,7 @@
 		<relativePath /> 
 	</parent>
 
-	<groupId>com.github.hiwepy</groupId>
+	<groupId>io.github.hiwepy</groupId>
 	<artifactId>mybatis-dbperms-spring-boot-starter</artifactId>
 	<description>Spring Boot Starter For Mybatis-dbperms</description>
 	<version>4.0.x.20251227-SNAPSHOT</version>
@@ -365,12 +365,12 @@
 				<version>${mybatis.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.github.hiwepy</groupId>
+				<groupId>io.github.hiwepy</groupId>
 				<artifactId>mybatis-biz</artifactId>
 				<version>${mybatis-biz.version}</version>
 			</dependency>
 			<dependency>
-				<groupId>com.github.hiwepy</groupId>
+				<groupId>io.github.hiwepy</groupId>
 				<artifactId>mybatis-dbperms</artifactId>
 				<version>${mybatis-dbperms.version}</version>
 			</dependency>
@@ -438,11 +438,11 @@
 			<artifactId>mybatis</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.github.hiwepy</groupId>
+			<groupId>io.github.hiwepy</groupId>
 			<artifactId>mybatis-biz</artifactId>
 		</dependency>
 		<dependency>
-			<groupId>com.github.hiwepy</groupId>
+			<groupId>io.github.hiwepy</groupId>
 			<artifactId>mybatis-dbperms</artifactId>
 		</dependency>
 
